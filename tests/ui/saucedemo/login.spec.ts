@@ -4,15 +4,16 @@ import { InventoryPage } from "../../../src/apps/saucedemo/pages/inventoryPage";
 import { Config } from "../../../src/core/config/env";
 
 test.describe("SauceDemo Login", () => {
-  test("should login successfully with valid credentials @smoke", async ({
-    page,
-  }) => {
+  test("should login successfully with valid credentials @smoke", async ({ page }) => {
     const loginPage = new LoginPage(page);
     await loginPage.open();
     await loginPage.login(Config.SAUCE_USERNAME, Config.SAUCE_PASSWORD);
 
     const inventoryPage = new InventoryPage(page);
-    await expect(page.locator(".title")).toContainText("Products");
+    await inventoryPage.waitForLoad();
+
+    const title = await inventoryPage.getTitle();
+    expect(title).toContain("Products");
   });
 
   test("should show error with locked out user", async ({ page }) => {
