@@ -3,33 +3,60 @@ import type { Locator, Page } from "@playwright/test";
 export class BasePage {
   constructor(protected readonly page: Page) {}
 
+  // --- navigation ---
   async goto(url: string): Promise<void> {
     await this.page.goto(url, { waitUntil: "domcontentloaded" });
   }
 
-  /**
-   * Opens a URL composed from baseUrl + optional path.
-   * Keeps navigation logic centralized across all apps.
-   */
   async open(baseUrl: string, path = ""): Promise<void> {
     const url = path ? `${baseUrl.replace(/\/$/, "")}/${path}` : baseUrl;
     await this.goto(url);
   }
 
+  // --- waits ---
+  async waitForDomReady(): Promise<void> {
+    await this.page.waitForLoadState("domcontentloaded");
+  }
+
+  async waitForNetworkIdle(): Promise<void> {
+    await this.page.waitForLoadState("networkidle");
+  }
+
+  async expectVisible(target: Locator, name = "element"): Promise<void> {
+    await target.waitFor({ state: "visible", timeout: 10_000 });
+  }
+
+  async expectHidden(target: Locator, name = "element"): Promise<void> {
+    await target.waitFor({ state: "hidden", timeout: 10_000 });
+  }
+
+  // --- stable actions ---
   async safeClick(target: Locator, name = "element"): Promise<void> {
-    await target.waitFor({ state: "visible" });
+    await this.expectVisible(target, name);
     await target.scrollIntoViewIfNeeded();
     await target.click({ timeout: 10_000 });
   }
 
   async safeFill(target: Locator, value: string, name = "field"): Promise<void> {
-    await target.waitFor({ state: "visible" });
+    await this.expectVisible(target, name);
     await target.scrollIntoViewIfNeeded();
     await target.fill(value);
   }
 
-  async text(target: Locator): Promise<string> {
-    await target.waitFor({ state: "visible" });
+  async safeType(
+    target: Locator,
+    value: string,
+    name = "field",
+    delayMs = 15
+  ): Promise<void> {
+    await this.expectVisible(target, name);
+    await target.scrollIntoViewIfNeeded();
+    await target.fill("");
+    await target.type(value, { delay: delayMs });
+  }
+
+  async text(target: Locator, name = "element"): Promise<string> {
+    await this.expectVisible(target, name);
     return (await target.innerText()).trim();
   }
 
