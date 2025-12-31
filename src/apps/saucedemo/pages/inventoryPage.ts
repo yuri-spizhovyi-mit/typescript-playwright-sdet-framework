@@ -1,45 +1,57 @@
-﻿import { Page, expect } from "@playwright/test";
+﻿import { test, expect, type Locator, type Page } from "@playwright/test";
 import { BaseSaucePage } from "./baseSaucePage";
 
 export class InventoryPage extends BaseSaucePage {
-  private readonly title = ".title";
-  private readonly inventoryItem = ".inventory_item";
-  private readonly cartBadge = ".shopping_cart_badge";
+  private readonly title: Locator;
+  private readonly inventoryItems: Locator;
+  private readonly cartBadge: Locator;
 
   constructor(page: Page) {
     super(page);
+    this.title = page.locator(".title");
+    this.inventoryItems = page.locator(".inventory_item");
+    this.cartBadge = page.locator(".shopping_cart_badge");
   }
 
   async waitForLoad(): Promise<void> {
-    await expect(this.page.locator(this.title)).toBeVisible();
+    await test.step("Wait for Inventory page to load", async () => {
+      await expect(this.title).toBeVisible();
+    });
   }
 
   async isLoaded(): Promise<boolean> {
-    return await this.page.locator(this.title).isVisible();
+    return await this.title.isVisible();
   }
 
   async getTitle(): Promise<string> {
-    return (await this.page.textContent(this.title)) || "";
+    return await test.step("Read Inventory page title", async () => {
+      return await this.text(this.title, "inventory title");
+    });
   }
 
   async getItemsCount(): Promise<number> {
-    return await this.page.locator(this.inventoryItem).count();
+    return await test.step("Count inventory items", async () => {
+      return await this.inventoryItems.count();
+    });
   }
 
   async addItemToCart(itemName: string): Promise<void> {
-    await this.page
-      .locator(this.inventoryItem)
-      .filter({ hasText: itemName })
-      .locator("button")
-      .click();
+    await test.step(`Add item to cart: ${itemName}`, async () => {
+      const item = this.inventoryItems.filter({ hasText: itemName });
+      const addBtn = item.locator("button");
+
+      await this.safeClick(addBtn, `add-to-cart button for ${itemName}`);
+    });
   }
 
   async getCartCount(): Promise<number> {
-    const badge = this.page.locator(this.cartBadge);
-    if (await badge.isVisible()) {
-      const text = await badge.textContent();
-      return parseInt(text || "0");
-    }
-    return 0;
+    return await test.step("Read cart badge count", async () => {
+      if (await this.cartBadge.isVisible()) {
+        const raw = (await this.cartBadge.textContent())?.trim() ?? "0";
+        const num = Number(raw);
+        return Number.isFinite(num) ? num : 0;
+      }
+      return 0;
+    });
   }
 }
