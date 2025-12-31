@@ -68,16 +68,16 @@ export default defineConfig({
     },
 
     // --- API project ---
-    {
-      name: "api",
-      testDir: "./tests/api",
-      use: {
-        // Optional: if you later start using request.get('/path')
-        baseURL: process.env.API_BASE_URL ?? process.env.JSONPLACEHOLDER_URL,
-        trace: "off",
-        video: "off",
-        screenshot: "off",
-      },
-    },
-  ],
-});
+{
+  name: "api",
+  testDir: "./tests/api",
+  use: {
+    baseURL:
+      process.env.API_BASE_URL ??
+      process.env.JSONPLACEHOLDER_URL ??
+      "https://jsonplaceholder.typicode.com",
+    trace: "off",
+    video: "off",
+    screenshot: "off",
+  },
+},
