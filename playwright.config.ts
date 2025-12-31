@@ -33,8 +33,6 @@ export default defineConfig({
     ["allure-playwright", { outputFolder: ALLURE_DIR, detail: true, suiteTitle: true }],
   ],
 
-  outputDir: "test-results",
-
   // Default settings (UI)
   use: {
     headless: HEADLESS,
@@ -49,6 +47,7 @@ export default defineConfig({
     {
       name: "ui-chromium",
       testDir: "./tests/ui",
+      outputDir: "test-results/ui-chromium",
       use: {
         ...devices["Desktop Chrome"],
         viewport: { width: 1920, height: 1080 },
@@ -57,6 +56,7 @@ export default defineConfig({
     {
       name: "ui-firefox",
       testDir: "./tests/ui",
+      outputDir: "test-results/ui-firefox",
       use: {
         ...devices["Desktop Firefox"],
         viewport: { width: 1920, height: 1080 },
@@ -65,6 +65,7 @@ export default defineConfig({
     {
       name: "api",
       testDir: "./tests/api",
+      outputDir: "test-results/api",
       use: {
         baseURL:
           process.env.API_BASE_URL ??
