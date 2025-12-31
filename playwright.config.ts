@@ -1,62 +1,83 @@
-﻿import { defineConfig, devices } from '@playwright/test';
-import * as dotenv from 'dotenv';
+﻿import { defineConfig, devices } from "@playwright/test";
+import * as dotenv from "dotenv";
+import path from "path";
 
-dotenv.config();
+// Load .env from repo root (works locally + CI)
+dotenv.config({ path: path.resolve(process.cwd(), ".env") });
+
+const toBool = (v: string | undefined, fallback: boolean) =>
+  v === undefined ? fallback : v.toLowerCase() === "true";
+
+const HEADLESS = toBool(process.env.HEADLESS, true);
+
+// Reuse your existing env keys (.env.example)
+const EXPECT_TIMEOUT = Number(process.env.DEFAULT_TIMEOUT ?? 10_000);
+const ACTION_TIMEOUT = Number(process.env.DEFAULT_TIMEOUT ?? 10_000);
+const NAVIGATION_TIMEOUT = Number(process.env.LONG_TIMEOUT ?? 30_000);
+
+const ALLURE_DIR = process.env.ALLURE_RESULTS_DIR ?? "allure-results";
 
 export default defineConfig({
-  testDir: './tests',
-  timeout: 30 * 1000,
-  expect: {
-    timeout: 10000,
-  },
+  testDir: "./tests",
+  timeout: 30_000,
+  expect: { timeout: EXPECT_TIMEOUT },
+
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
+
   reporter: [
-    ['list'],
-    ['html', { open: 'never' }],
-    ['allure-playwright', { 
-      outputFolder: 'allure-results',
-      detail: true,
-      suiteTitle: true 
-    }],
+    ["list"],
+    ["html", { open: "never" }],
+    [
+      "allure-playwright",
+      { outputFolder: ALLURE_DIR, detail: true, suiteTitle: true },
+    ],
   ],
+
+  outputDir: "test-results",
+
+  // Default settings (UI)
   use: {
-    baseURL: process.env.BASE_URL || 'http://localhost:3000',
-    trace: 'retain-on-failure',
-    screenshot: 'only-on-failure',
-    video: 'retain-on-failure',
-    actionTimeout: 10000,
-    navigationTimeout: 30000,
+    headless: HEADLESS,
+    actionTimeout: ACTION_TIMEOUT,
+    navigationTimeout: NAVIGATION_TIMEOUT,
+    trace: "retain-on-failure",
+    screenshot: "only-on-failure",
+    video: "retain-on-failure",
   },
 
   projects: [
+    // --- UI projects ---
     {
-      name: 'chromium',
-      use: { 
-        ...devices['Desktop Chrome'],
-        viewport: { width: 1920, height: 1080 },
-      },
-      testMatch: /tests\/ui\/.*\.spec\.ts/,
-      grep: /@smoke|@full/,
-    },
-    {
-      name: 'firefox',
-      use: { 
-        ...devices['Desktop Firefox'],
-        viewport: { width: 1920, height: 1080 },
-      },
-      testMatch: /tests\/ui\/.*\.spec\.ts/,
-    },
-    {
-      name: 'api',
+      name: "ui-chromium",
+      testDir: "./tests/ui",
       use: {
-        baseURL: process.env.API_BASE_URL || 'https://api.example.com',
+        ...devices["Desktop Chrome"],
+        viewport: { width: 1920, height: 1080 },
       },
-      testMatch: /tests\/api\/.*\.spec\.ts/,
+    },
+    {
+      name: "ui-firefox",
+      testDir: "./tests/ui",
+      use: {
+        ...devices["Desktop Firefox"],
+        viewport: { width: 1920, height: 1080 },
+      },
+    },
+
+    // --- API project ---
+    {
+      name: "api",
+      testDir: "./tests/api",
+      use: {
+        // Optional: if you later start using request.get('/path')
+        baseURL: process.env.API_BASE_URL ?? process.env.JSONPLACEHOLDER_URL,
+        trace: "off",
+        video: "off",
+        screenshot: "off",
+      },
     },
   ],
-
-  outputDir: 'test-results/',
 });
