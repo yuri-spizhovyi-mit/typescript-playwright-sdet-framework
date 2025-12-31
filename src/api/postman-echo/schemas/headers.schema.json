@@ -1,0 +1,8 @@
+{
+  "type": "object",
+  "required": ["headers"],
+  "properties": {
+    "headers": { "type": "object" }
+  },
+  "additionalProperties": true
+}
