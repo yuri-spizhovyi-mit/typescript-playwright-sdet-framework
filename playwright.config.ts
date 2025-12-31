@@ -30,10 +30,7 @@ export default defineConfig({
   reporter: [
     ["list"],
     ["html", { open: "never" }],
-    [
-      "allure-playwright",
-      { outputFolder: ALLURE_DIR, detail: true, suiteTitle: true },
-    ],
+    ["allure-playwright", { outputFolder: ALLURE_DIR, detail: true, suiteTitle: true }],
   ],
 
   outputDir: "test-results",
@@ -49,7 +46,6 @@ export default defineConfig({
   },
 
   projects: [
-    // --- UI projects ---
     {
       name: "ui-chromium",
       testDir: "./tests/ui",
@@ -66,18 +62,18 @@ export default defineConfig({
         viewport: { width: 1920, height: 1080 },
       },
     },
-
-    // --- API project ---
-{
-  name: "api",
-  testDir: "./tests/api",
-  use: {
-    baseURL:
-      process.env.API_BASE_URL ??
-      process.env.JSONPLACEHOLDER_URL ??
-      "https://jsonplaceholder.typicode.com",
-    trace: "off",
-    video: "off",
-    screenshot: "off",
-  },
-},
+    {
+      name: "api",
+      testDir: "./tests/api",
+      use: {
+        baseURL:
+          process.env.API_BASE_URL ??
+          process.env.JSONPLACEHOLDER_URL ??
+          "https://jsonplaceholder.typicode.com",
+        trace: "off",
+        video: "off",
+        screenshot: "off",
+      },
+    },
+  ],
+});
