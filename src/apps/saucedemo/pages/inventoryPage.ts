@@ -1,10 +1,10 @@
-﻿import { Page, expect } from '@playwright/test';
-import { BaseSaucePage } from './baseSaucePage';
+﻿import { Page, expect } from "@playwright/test";
+import { BaseSaucePage } from "./baseSaucePage";
 
 export class InventoryPage extends BaseSaucePage {
-  private readonly title = '.title';
-  private readonly inventoryItem = '.inventory_item';
-  private readonly cartBadge = '.shopping_cart_badge';
+  private readonly title = ".title";
+  private readonly inventoryItem = ".inventory_item";
+  private readonly cartBadge = ".shopping_cart_badge";
 
   constructor(page: Page) {
     super(page);
@@ -19,7 +19,7 @@ export class InventoryPage extends BaseSaucePage {
   }
 
   async getTitle(): Promise<string> {
-    return await this.page.textContent(this.title) || '';
+    return (await this.page.textContent(this.title)) || "";
   }
 
   async getItemsCount(): Promise<number> {
@@ -27,14 +27,18 @@ export class InventoryPage extends BaseSaucePage {
   }
 
   async addItemToCart(itemName: string): Promise<void> {
-    await this.page.locator(	ext=).locator('..').locator('button').click();
+    await this.page
+      .locator(this.inventoryItem)
+      .filter({ hasText: itemName })
+      .locator("button")
+      .click();
   }
 
   async getCartCount(): Promise<number> {
     const badge = this.page.locator(this.cartBadge);
     if (await badge.isVisible()) {
       const text = await badge.textContent();
-      return parseInt(text || '0');
+      return parseInt(text || "0");
     }
     return 0;
   }
