@@ -1,12 +1,13 @@
-﻿import { Page } from "@playwright/test";
+﻿import type { Page } from "@playwright/test";
 import { Config } from "../../../core/config/env";
+import { BasePage } from "../../../core/pages/basePage";
 
-export class BaseDemoQAPage {
-  constructor(protected readonly page: Page) {}
+export class BaseDemoQAPage extends BasePage {
+  constructor(page: Page) {
+    super(page);
+  }
 
   async open(path: string): Promise<void> {
-    const url = `${Config.DEMOQA_URL}/${path}`;
-    await this.page.goto(url);
-    await this.page.waitForLoadState("domcontentloaded");
+    await super.open(Config.DEMOQA_URL, path);
   }
 }

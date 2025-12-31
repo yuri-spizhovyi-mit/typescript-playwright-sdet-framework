@@ -7,17 +7,22 @@ export class BasePage {
     await this.page.goto(url, { waitUntil: "domcontentloaded" });
   }
 
+  /**
+   * Opens a URL composed from baseUrl + optional path.
+   * Keeps navigation logic centralized across all apps.
+   */
+  async open(baseUrl: string, path = ""): Promise<void> {
+    const url = path ? `${baseUrl.replace(/\/$/, "")}/${path}` : baseUrl;
+    await this.goto(url);
+  }
+
   async safeClick(target: Locator, name = "element"): Promise<void> {
     await target.waitFor({ state: "visible" });
     await target.scrollIntoViewIfNeeded();
     await target.click({ timeout: 10_000 });
   }
 
-  async safeFill(
-    target: Locator,
-    value: string,
-    name = "field"
-  ): Promise<void> {
+  async safeFill(target: Locator, value: string, name = "field"): Promise<void> {
     await target.waitFor({ state: "visible" });
     await target.scrollIntoViewIfNeeded();
     await target.fill(value);

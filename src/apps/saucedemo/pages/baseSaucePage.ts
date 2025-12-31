@@ -1,13 +1,13 @@
-﻿import { Page } from "@playwright/test";
+﻿import type { Page } from "@playwright/test";
 import { Config } from "../../../core/config/env";
+import { BasePage } from "../../../core/pages/basePage";
 
-export class BaseSaucePage {
-  constructor(protected readonly page: Page) {}
+export class BaseSaucePage extends BasePage {
+  constructor(page: Page) {
+    super(page);
+  }
 
   async open(path = ""): Promise<void> {
-    const url = path ? `${Config.SAUCE_URL}/${path}` : Config.SAUCE_URL;
-
-    await this.page.goto(url);
-    await this.page.waitForLoadState("domcontentloaded");
+    await super.open(Config.SAUCE_URL, path);
   }
 }
