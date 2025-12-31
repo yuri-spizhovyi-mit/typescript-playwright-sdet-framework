@@ -88,6 +88,9 @@ jobs:
     needs: [api-tests, ui-tests]
     runs-on: ubuntu-latest
     if: always()
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - uses: actions/checkout@v4
@@ -131,4 +134,5 @@ jobs:
           path: allure-report
 
       - name: Deploy to GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v4
