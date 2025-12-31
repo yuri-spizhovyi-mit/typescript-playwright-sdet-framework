@@ -5,11 +5,11 @@ export class JsonPlaceholderClient {
   constructor(private readonly request: APIRequestContext) {}
 
   async getPosts(): Promise<APIResponse> {
-    return this.request.get(`${Config.JSONPLACEHOLDER_URL}/posts`);
+    return this.request.get("/posts");
   }
 
   async getPost(id: number): Promise<APIResponse> {
-    return this.request.get(`${Config.JSONPLACEHOLDER_URL}/posts/${id}`);
+    return this.request.get(`/posts/${id}`);
   }
 
   async createPost(data: {
@@ -17,6 +17,6 @@ export class JsonPlaceholderClient {
     body: string;
     userId: number;
   }): Promise<APIResponse> {
-    return this.request.post(`${Config.JSONPLACEHOLDER_URL}/posts`, { data });
+    return this.request.post("/posts", { data });
   }
 }
