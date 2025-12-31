@@ -1,6 +1,6 @@
 ﻿import { test, expect } from "../../../src/core/fixtures/apiFixtures";
-import Ajv from "ajv";
 import postSchema from "../../../src/api/jsonplaceholder/schemas/post.schema.json";
+import { validateSchema } from "../../../src/core/api/schemaValidator";
 
 test.describe("JSONPlaceholder API", () => {
   test("should fetch posts and validate schema", async ({ jsonPlaceholder }) => {
@@ -10,8 +10,6 @@ test.describe("JSONPlaceholder API", () => {
     const posts = await response.json();
     expect(Array.isArray(posts)).toBeTruthy();
 
-    const ajv = new Ajv();
-    const validate = ajv.compile(postSchema);
-    expect(validate(posts[0])).toBeTruthy();
+    validateSchema(postSchema as unknown as object, posts[0], "post.schema.json");
   });
 });
