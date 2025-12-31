@@ -1,23 +1,20 @@
 ﻿export class DataGenerator {
-  static randomString(length: number = 10): string {
-    return Math.random().toString(36).substring(2, length + 2);
-  }
-
-  static randomEmail(): string {
-    return 	est_@example.com;
-  }
-
-  static randomNumber(min: number = 0, max: number = 100): number {
+  private static randomNumber(min: number, max: number): number {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
-  static fullName(): string {
-    const firstNames = ['John', 'Jane', 'Alice', 'Bob', 'Charlie'];
-    const lastNames = ['Smith', 'Doe', 'Johnson', 'Brown', 'Wilson'];
-    return ${firstNames[this.randomNumber(0, 4)]} ;
+  static email(): string {
+    const n = this.randomNumber(100, 9999);
+    return `test_${n}@example.com`;
+  }
+
+  static firstName(): string {
+    const firstNames = ["Alex", "John", "Maria", "Anna", "Yuri"];
+    return firstNames[this.randomNumber(0, firstNames.length - 1)];
   }
 
   static address(): string {
-    return ${this.randomNumber(100, 9999)} Main St, City, State ;
+    const n = this.randomNumber(100, 9999);
+    return `${n} Main St, City, State`;
   }
 }
