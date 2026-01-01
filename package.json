@@ -4,6 +4,8 @@
   "description": "Portfolio-grade SDET automation framework with TypeScript and Playwright",
   "main": "index.js",
   "scripts": {
+    "pretest:ui": "node scripts/allure-env.mjs",
+    "pretest:api": "node scripts/allure-env.mjs",
     "test": "playwright test",
     "test:smoke": "playwright test --grep @smoke",
     "test:api": "playwright test --project=api",
