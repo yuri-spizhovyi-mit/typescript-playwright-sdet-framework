@@ -8,7 +8,9 @@
     "postman",
     "playwright",
     "sdet",
-    "domcontentloaded"
+    "domcontentloaded",
+    "autocomplete",
+    "multiselect",
+    "pannel"
   ]
 }
-
