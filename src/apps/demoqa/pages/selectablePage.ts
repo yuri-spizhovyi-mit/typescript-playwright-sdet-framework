@@ -11,7 +11,6 @@ export class SelectablePage extends BaseDemoQAPage {
     this.activePanel = page.locator(".tab-pane.active.show");
   }
 
-  // 🔹 Lazy, tab-scoped locator (critical)
   private get items(): Locator {
     return this.activePanel.locator(".list-group-item");
   }
