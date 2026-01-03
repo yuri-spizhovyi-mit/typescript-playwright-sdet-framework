@@ -24,13 +24,31 @@ export class AutoCompletePage extends BaseDemoQAPage {
 
   async addMultiColor(color: string): Promise<void> {
     await test.step(`Add multi color: ${color}`, async () => {
+      await this.multiInput.click();
       await this.multiInput.fill(color);
-      await this.page.keyboard.press("Enter");
+
+      const option = this.page.locator(".auto-complete__option", {
+        hasText: color,
+      });
+      await expect(option).toBeVisible();
+      await option.click();
+
+      await this.page.keyboard.press("Tab");
+
+      const token = this.page.locator(".auto-complete__multi-value__label", {
+        hasText: color,
+      });
+
+      await expect(token).toBeVisible();
     });
   }
 
   async getMultiSelectedValues(): Promise<string[]> {
-    return await this.multiValues.allTextContents();
+    const tokens = this.page.locator(".auto-complete__multi-value__label");
+
+    await expect(tokens.first()).toBeVisible();
+
+    return tokens.allTextContents();
   }
 
   async setSingleColor(color: string): Promise<void> {

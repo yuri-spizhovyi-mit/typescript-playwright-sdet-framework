@@ -15,8 +15,7 @@ test.describe("DemoQA Auto Complete", () => {
     await autoCompletePage.addMultiColor("Blue");
 
     const selected = await autoCompletePage.getMultiSelectedValues();
-    expect(selected).toContain("Red");
-    expect(selected).toContain("Blue");
+    expect(selected).toEqual(expect.arrayContaining(["Red", "Blue"]));
   });
 
   test("should select single color", async ({ page }) => {

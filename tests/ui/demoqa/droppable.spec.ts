@@ -14,6 +14,6 @@ test.describe("DemoQA Droppable", () => {
     await droppablePage.dragToDrop();
 
     const dropText = await droppablePage.getDropText();
-    expect(dropText).toContain("Drop here");
+    expect(dropText).toContain("Dropped!");
   });
 });
