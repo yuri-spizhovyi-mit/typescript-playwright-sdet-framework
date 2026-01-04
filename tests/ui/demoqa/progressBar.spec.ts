@@ -2,15 +2,15 @@ import { test, expect } from "@playwright/test";
 import { ProgressBarPage } from "../../../src/apps/demoqa/pages/progressBarPage";
 
 test.describe("DemoQA Progress Bar", () => {
-  test("should reach 100% @smoke", async ({ page }) => {
+  test("should complete progress bar @smoke", async ({ page }) => {
     const progressBar = new ProgressBarPage(page);
 
     await progressBar.openPage();
     await progressBar.start();
 
-    // align with Python behavior
-    await progressBar.waitUntilStarted();
-    await progressBar.waitUntilAtLeast(100);
+    await progressBar.waitForProgress(100);
+
+    await progressBar.waitForResetButton();
 
     expect(await progressBar.getProgressValue()).toBe(100);
   });

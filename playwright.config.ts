@@ -30,7 +30,10 @@ export default defineConfig({
   reporter: [
     ["list"],
     ["html", { open: "never" }],
-    ["allure-playwright", { outputFolder: ALLURE_DIR, detail: true, suiteTitle: true }],
+    [
+      "allure-playwright",
+      { outputFolder: ALLURE_DIR, detail: true, suiteTitle: true },
+    ],
   ],
 
   // Default settings (UI)
@@ -59,6 +62,15 @@ export default defineConfig({
       outputDir: "test-results/ui-firefox",
       use: {
         ...devices["Desktop Firefox"],
+        viewport: { width: 1920, height: 1080 },
+      },
+    },
+    {
+      name: "ui-webkit",
+      testDir: "./tests/ui",
+      outputDir: "test-results/ui-webkit",
+      use: {
+        ...devices["Desktop Safari"],
         viewport: { width: 1920, height: 1080 },
       },
     },
