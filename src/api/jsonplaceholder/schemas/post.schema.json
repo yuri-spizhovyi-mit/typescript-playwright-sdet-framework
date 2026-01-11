@@ -1,10 +1,11 @@
 ﻿{
   "type": "object",
-  "required": ["userId", "id", "title", "body"],
+  "required": ["id", "title", "body", "userId"],
   "properties": {
-    "userId": { "type": "number" },
     "id": { "type": "number" },
     "title": { "type": "string" },
-    "body": { "type": "string" }
-  }
+    "body": { "type": "string" },
+    "userId": { "type": "number" }
+  },
+  "additionalProperties": false
 }
