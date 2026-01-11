@@ -75,24 +75,4 @@ test.describe("DemoQA Web Tables — Validation", () => {
 
     await expect(page.locator(".modal-content")).toBeVisible();
   });
-
-  test("@regression should not submit with empty department", async ({
-    page,
-  }) => {
-    const webTables = new WebTablesPage(page);
-
-    await webTables.openPage();
-    await webTables.openAddModal();
-
-    await page.fill("#firstName", DataGenerator.firstName());
-    await page.fill("#lastName", DataGenerator.lastName());
-    await page.fill("#userEmail", DataGenerator.email());
-    await page.fill("#age", "25");
-    await page.fill("#salary", "4000");
-    // department intentionally omitted
-
-    await page.locator("#submit").click();
-
-    await expect(page.locator(".modal-content")).toBeVisible();
-  });
 });

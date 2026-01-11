@@ -60,8 +60,8 @@ export class WebTablesPage extends BaseDemoQAPage {
   async waitForLoad(): Promise<void> {
     await test.step("Wait for Web Tables page to load", async () => {
       await expect(this.page).toHaveURL(/webtables/);
-      await expect(this.header).toHaveText("Web Tables");
       await expect(this.addBtn).toBeVisible();
+      await expect(this.rows.first()).toBeVisible();
     });
   }
 
