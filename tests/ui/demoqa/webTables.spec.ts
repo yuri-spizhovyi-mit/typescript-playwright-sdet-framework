@@ -6,14 +6,7 @@ test.describe("DemoQA Web Tables", () => {
   test("should add a new user to web tables @smoke", async ({ page }) => {
     const webTables = new WebTablesPage(page);
 
-    const user = {
-      firstName: DataGenerator.firstName(),
-      lastName: DataGenerator.lastName(),
-      email: DataGenerator.email(),
-      age: 30,
-      salary: 5000,
-      department: "QA",
-    };
+    const user = DataGenerator.webTableUser();
 
     await webTables.openPage();
     await webTables.addUser(user);
