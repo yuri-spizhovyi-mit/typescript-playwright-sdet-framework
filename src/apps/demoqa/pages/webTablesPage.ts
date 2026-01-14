@@ -111,4 +111,38 @@ export class WebTablesPage extends BaseDemoQAPage {
   async getRowCount(): Promise<number> {
     return this.rows.count();
   }
+
+  // ---------- Row helpers (Senior-level) ----------
+
+  private rowByEmail(email: string): Locator {
+    return this.page.locator(".rt-tr-group", { hasText: email });
+  }
+
+  private editBtnFor(email: string): Locator {
+    return this.rowByEmail(email).locator('[title="Edit"]');
+  }
+
+  private deleteBtnFor(email: string): Locator {
+    return this.rowByEmail(email).locator('[title="Delete"]');
+  }
+
+  async rowExists(email: string): Promise<boolean> {
+    return (await this.rowByEmail(email).count()) > 0;
+  }
+
+  async openEditModal(email: string): Promise<void> {
+    await test.step(`Open edit modal for ${email}`, async () => {
+      await expect(this.rowByEmail(email)).toBeVisible();
+      await this.editBtnFor(email).click();
+      await expect(this.modal).toBeVisible();
+    });
+  }
+
+  async deleteRow(email: string): Promise<void> {
+    await test.step(`Delete row with email ${email}`, async () => {
+      await expect(this.rowByEmail(email)).toBeVisible();
+      await this.deleteBtnFor(email).click();
+      await expect(this.rowByEmail(email)).toHaveCount(0);
+    });
+  }
 }
